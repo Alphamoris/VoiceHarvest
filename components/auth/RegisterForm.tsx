@@ -1,0 +1,386 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "framer-motion";
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  ArrowRight,
+  User,
+  Phone,
+  MapPin,
+  Building,
+} from "lucide-react";
+import { registerSchema, type RegisterFormData } from "@/lib/validators";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/context/ToastContext";
+import { Button } from "@/components/shared/Button";
+import { ROUTES } from "@/lib/constants";
+import { INDIAN_STATES } from "@/types/listing";
+import type { UserType } from "@/types/auth";
+
+export function RegisterForm() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [step, setStep] = useState(1);
+  const { register: registerUser, loading } = useAuth();
+  const { showToast } = useToast();
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    trigger,
+    formState: { errors },
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
+      userType: "FARMER",
+      state: "",
+      terms: false,
+    },
+  });
+
+  const userType = watch("userType");
+
+  const nextStep = async () => {
+    const fieldsToValidate =
+      step === 1
+        ? (["fullName", "email", "phone", "userType"] as const)
+        : (["state"] as const);
+
+    const isValid = await trigger(fieldsToValidate);
+    if (isValid) setStep(step + 1);
+  };
+
+  const prevStep = () => setStep(step - 1);
+
+  const onSubmit = async (data: RegisterFormData) => {
+    try {
+      await registerUser(data.email, data.password, {
+        name: data.fullName,
+        role: data.userType as "FARMER" | "BUYER" | "ADMIN",
+        phone: data.phone,
+        location: {
+          state: data.state,
+          district: "",
+        },
+      });
+      showToast("Account created successfully!", "success");
+      router.push(ROUTES.dashboard.home);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Registration failed";
+      showToast(message, "error");
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="w-full max-w-md mx-auto"
+    >
+      <div className="bg-white rounded-2xl shadow-medium p-8">
+        <div className="text-center mb-8">
+          <Link href={ROUTES.home} className="inline-block mb-4">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="text-2xl font-bold text-forest"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              🌾 VoiceHarvest
+            </motion.div>
+          </Link>
+          <h1
+            className="text-2xl font-bold text-gray-800 mb-2"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            Create Account
+          </h1>
+          <p className="text-gray-600">Join our farming community</p>
+        </div>
+
+        <div className="flex items-center justify-center mb-8">
+          {[1, 2, 3].map((s) => (
+            <div key={s} className="flex items-center">
+              <motion.div
+                animate={{
+                  scale: step === s ? 1.2 : 1,
+                  backgroundColor: step >= s ? "#1B5E20" : "#E5E7EB",
+                }}
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                  step >= s ? "text-white" : "text-gray-500"
+                }`}
+              >
+                {s}
+              </motion.div>
+              {s < 3 && (
+                <div
+                  className={`w-12 h-0.5 ${
+                    step > s ? "bg-forest" : "bg-gray-200"
+                  }`}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {step === 1 && (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-4"
+            >
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Full Name
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    type="text"
+                    {...register("fullName")}
+                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:border-forest focus:ring-2 focus:ring-forest/20 outline-none transition-all"
+                    placeholder="Your full name"
+                  />
+                </div>
+                {errors.fullName && (
+                  <p className="text-error text-sm mt-1">{errors.fullName.message}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    type="email"
+                    {...register("email")}
+                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:border-forest focus:ring-2 focus:ring-forest/20 outline-none transition-all"
+                    placeholder="you@example.com"
+                  />
+                </div>
+                {errors.email && (
+                  <p className="text-error text-sm mt-1">{errors.email.message}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Phone Number
+                </label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    type="tel"
+                    {...register("phone")}
+                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:border-forest focus:ring-2 focus:ring-forest/20 outline-none transition-all"
+                    placeholder="10-digit mobile number"
+                  />
+                </div>
+                {errors.phone && (
+                  <p className="text-error text-sm mt-1">{errors.phone.message}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  I am a
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { value: "FARMER" as const, label: "Farmer", icon: "🌾" },
+                    { value: "BUYER" as const, label: "Buyer", icon: "🛒" },
+                  ].map((option) => (
+                    <label
+                      key={option.value}
+                      className={`flex items-center justify-center gap-2 p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                        userType === option.value
+                          ? "border-forest bg-forest/5"
+                          : "border-gray-200 hover:border-gray-300"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        {...register("userType")}
+                        value={option.value}
+                        className="sr-only"
+                      />
+                      <span className="text-2xl">{option.icon}</span>
+                      <span className="font-medium text-gray-800">
+                        {option.label}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+                {errors.userType && (
+                  <p className="text-error text-sm mt-1">
+                    {errors.userType.message}
+                  </p>
+                )}
+              </div>
+
+              <Button type="button" fullWidth onClick={nextStep}>
+                Continue
+              </Button>
+            </motion.div>
+          )}
+
+          {step === 2 && (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-4"
+            >
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  State
+                </label>
+                <div className="relative">
+                  <Building className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <select
+                    {...register("state")}
+                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:border-forest focus:ring-2 focus:ring-forest/20 outline-none transition-all appearance-none bg-white"
+                  >
+                    <option value="">Select state</option>
+                    {INDIAN_STATES.map((state) => (
+                      <option key={state} value={state}>
+                        {state}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {errors.state && (
+                  <p className="text-error text-sm mt-1">{errors.state.message}</p>
+                )}
+              </div>
+
+              <div className="flex gap-3">
+                <Button type="button" variant="secondary" onClick={prevStep}>
+                  Back
+                </Button>
+                <Button type="button" fullWidth onClick={nextStep}>
+                  Continue
+                </Button>
+              </div>
+            </motion.div>
+          )}
+
+          {step === 3 && (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-4"
+            >
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    {...register("password")}
+                    className="w-full pl-10 pr-12 py-3 rounded-lg border border-gray-300 focus:border-forest focus:ring-2 focus:ring-forest/20 outline-none transition-all"
+                    placeholder="Create a password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="text-error text-sm mt-1">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    {...register("confirmPassword")}
+                    className="w-full pl-10 pr-12 py-3 rounded-lg border border-gray-300 focus:border-forest focus:ring-2 focus:ring-forest/20 outline-none transition-all"
+                    placeholder="Confirm your password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+                {errors.confirmPassword && (
+                  <p className="text-error text-sm mt-1">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex gap-3">
+                <Button type="button" variant="secondary" onClick={prevStep}>
+                  Back
+                </Button>
+                <Button
+                  type="submit"
+                  fullWidth
+                  loading={loading}
+                  rightIcon={<ArrowRight className="h-5 w-5" />}
+                >
+                  Create Account
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </form>
+
+        <div className="mt-6 text-center">
+          <p className="text-gray-600">
+            Already have an account?{" "}
+            <Link
+              href={ROUTES.auth.login}
+              className="text-forest font-semibold hover:text-forest/80 transition-colors"
+            >
+              Sign in
+            </Link>
+          </p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}

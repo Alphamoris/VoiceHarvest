@@ -1,0 +1,159 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  FARMER
+  BUYER
+  ADMIN
+}
+
+enum CropType {
+  VEGETABLES
+  FRUITS
+  GRAINS
+  PULSES
+  SPICES
+  DAIRY
+  OTHER
+}
+
+enum QualityGrade {
+  A_PLUS @map("A+")
+  A
+  B
+  C
+}
+
+enum ListingStatus {
+  ACTIVE
+  SOLD
+  EXPIRED
+  DRAFT
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+type Location {
+  state    String
+  district String
+  village  String?
+  pincode  String?
+}
+
+type DeliveryAddress {
+  fullAddress String
+  landmark    String?
+  pincode     String
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  firebaseUid   String    @unique
+  email         String    @unique
+  name          String
+  phone         String?
+  role          UserRole
+  profileImage  String?
+  location      Location?
+  preferredLang String    @default("hi")
+  isVerified    Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  listings      Listing[] @relation("SellerListings")
+  buyerOrders   Order[]   @relation("BuyerOrders")
+  sellerOrders  Order[]   @relation("SellerOrders")
+  voiceCommands VoiceCommand[]
+}
+
+model Listing {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  description  String
+  cropType     CropType
+  quantity     Float
+  unit         String
+  pricePerUnit Float
+  qualityGrade QualityGrade
+  images       String[]
+  location     Location
+  status       ListingStatus @default(ACTIVE)
+  viewCount    Int           @default(0)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  sellerId     String        @db.ObjectId
+  seller       User          @relation("SellerListings", fields: [sellerId], references: [id])
+  orders       Order[]
+}
+
+model Order {
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  quantity        Float
+  totalAmount     Float
+  status          OrderStatus     @default(PENDING)
+  paymentStatus   PaymentStatus   @default(PENDING)
+  deliveryAddress DeliveryAddress
+  expectedDelivery DateTime?
+  deliveredAt     DateTime?
+  notes           String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  listingId       String          @db.ObjectId
+  listing         Listing         @relation(fields: [listingId], references: [id])
+  buyerId         String          @db.ObjectId
+  buyer           User            @relation("BuyerOrders", fields: [buyerId], references: [id])
+  sellerId        String          @db.ObjectId
+  seller          User            @relation("SellerOrders", fields: [sellerId], references: [id])
+}
+
+model VoiceCommand {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  audioUrl      String?
+  transcription String
+  language      String
+  intent        String?
+  extractedData Json?
+  response      String?
+  confidence    Float?
+  createdAt     DateTime @default(now())
+
+  userId        String   @db.ObjectId
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model MarketPrice {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  cropType  CropType
+  state     String
+  district  String
+  minPrice  Float
+  maxPrice  Float
+  avgPrice  Float
+  unit      String
+  date      DateTime
+  createdAt DateTime @default(now())
+
+  @@unique([cropType, state, district, date])
+}
