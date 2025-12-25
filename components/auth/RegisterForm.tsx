@@ -306,6 +306,7 @@ export function RegisterForm() {
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -314,6 +315,9 @@ export function RegisterForm() {
                     )}
                   </button>
                 </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Min 8 chars, 1 uppercase, 1 lowercase, 1 number
+                </p>
                 {errors.password && (
                   <p className="text-error text-sm mt-1">
                     {errors.password.message}
@@ -337,6 +341,7 @@ export function RegisterForm() {
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600"
+                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -351,6 +356,28 @@ export function RegisterForm() {
                   </p>
                 )}
               </div>
+
+              <div className="flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  {...register("terms")}
+                  id="terms"
+                  className="mt-1 h-4 w-4 rounded border-gray-300 text-forest focus:ring-forest"
+                />
+                <label htmlFor="terms" className="text-sm text-gray-600">
+                  I agree to the{" "}
+                  <Link href="/terms" className="text-forest hover:underline">
+                    Terms of Service
+                  </Link>{" "}
+                  and{" "}
+                  <Link href="/privacy" className="text-forest hover:underline">
+                    Privacy Policy
+                  </Link>
+                </label>
+              </div>
+              {errors.terms && (
+                <p className="text-error text-sm">{errors.terms.message}</p>
+              )}
 
               <div className="flex gap-3">
                 <Button type="button" variant="secondary" onClick={prevStep}>

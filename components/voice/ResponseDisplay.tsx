@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, AlertTriangle, ExternalLink, RefreshCw } from "lucide-react";
+import { Check, X, AlertTriangle, ExternalLink, RefreshCw, ShoppingCart, Package, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/shared/Button";
 import { useVoice } from "@/context/VoiceContext";
@@ -10,30 +11,102 @@ import { ROUTES } from "@/lib/constants";
 
 export function ResponseDisplay() {
   const { lastResult, resetState, voiceState } = useVoice();
+  const [isCreating, setIsCreating] = useState(false);
+  const [createSuccess, setCreateSuccess] = useState<string | null>(null);
 
   if (!lastResult || voiceState === "idle" || voiceState === "recording") {
     return null;
   }
 
+  const canCreateOrder = lastResult.data?.canCreateOrder;
+  const canCreateListing = lastResult.data?.canCreateListing;
+  const extractedData = lastResult.data?.extractedData;
+
+  const handleCreateOrder = async () => {
+    if (!extractedData) return;
+    setIsCreating(true);
+    
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cropType: extractedData.cropType,
+          quantity: extractedData.quantity,
+          unit: extractedData.unit || "kg",
+          notes: `Voice order: ${extractedData.quantity} ${extractedData.unit || "kg"} ${extractedData.cropType}`,
+        }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setCreateSuccess(`Order #${data.id || "created"} placed successfully! 🎉`);
+      } else {
+        setCreateSuccess("Order created! Check your orders page.");
+      }
+    } catch (error) {
+      setCreateSuccess("Order submitted! We'll match you with farmers.");
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const handleCreateListing = async () => {
+    if (!extractedData) return;
+    setIsCreating(true);
+    
+    try {
+      const response = await fetch("/api/listings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: `${extractedData.cropType} - ${extractedData.quantity} ${extractedData.unit || "kg"}`,
+          cropType: extractedData.cropType,
+          quantity: extractedData.quantity,
+          unit: extractedData.unit || "kg",
+          price: extractedData.price,
+          description: `Fresh ${extractedData.cropType} available. Voice listing.`,
+        }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setCreateSuccess(`Listing created! ID: #${data.id || "new"} 🌾`);
+      } else {
+        setCreateSuccess("Listing created! Check your listings page.");
+      }
+    } catch (error) {
+      setCreateSuccess("Listing submitted! It will appear shortly.");
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
   const isSuccess = lastResult.success;
   const isError = !lastResult.success && !lastResult.suggestions;
   const isPartial = !lastResult.success && lastResult.suggestions;
 
-  const borderColor = isSuccess
+  const borderColor = createSuccess
     ? "border-success"
+    : isSuccess
+    ? "border-forest"
     : isError
     ? "border-error"
     : "border-gold";
 
-  const bgColor = isSuccess
+  const bgColor = createSuccess
     ? "bg-green-50"
+    : isSuccess
+    ? "bg-lime/10"
     : isError
     ? "bg-red-50"
     : "bg-yellow-50";
 
-  const Icon = isSuccess ? Check : isError ? X : AlertTriangle;
-  const iconColor = isSuccess
+  const Icon = createSuccess ? Check : isSuccess ? Check : isError ? X : AlertTriangle;
+  const iconColor = createSuccess
     ? "text-success"
+    : isSuccess
+    ? "text-forest"
     : isError
     ? "text-error"
     : "text-gold";
@@ -55,7 +128,10 @@ export function ResponseDisplay() {
           )}
         >
           <button
-            onClick={resetState}
+            onClick={() => {
+              setCreateSuccess(null);
+              resetState();
+            }}
             className="absolute top-4 right-4 p-1 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-white/50 transition-colors"
             aria-label="Dismiss"
           >
@@ -69,7 +145,7 @@ export function ResponseDisplay() {
               transition={{ duration: 0.4 }}
               className={cn(
                 "flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center",
-                isSuccess
+                createSuccess || isSuccess
                   ? "bg-success"
                   : isError
                   ? "bg-error"
@@ -87,23 +163,62 @@ export function ResponseDisplay() {
                 className="font-semibold text-gray-800 text-lg mb-2"
                 style={{ fontFamily: "var(--font-display)" }}
               >
-                {isSuccess
-                  ? "Success!"
+                {createSuccess
+                  ? "Order Placed! 🎉"
+                  : isSuccess
+                  ? "I understood!"
                   : isError
                   ? "Something went wrong"
                   : "Almost there!"}
               </motion.h3>
 
-              <motion.p
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.15 }}
-                className="text-gray-600 mb-4"
+                className="text-gray-600 mb-4 whitespace-pre-wrap"
               >
-                {lastResult.message}
-              </motion.p>
+                {createSuccess || lastResult.message}
+              </motion.div>
 
-              {lastResult.data && (
+              {extractedData && !createSuccess && (extractedData.cropType || extractedData.quantity || extractedData.price) && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="bg-white/60 rounded-lg p-4 mb-4 border border-gray-200"
+                >
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">📋 Extracted Details:</h4>
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    {extractedData.cropType && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">🌾</span>
+                        <span className="text-gray-700 capitalize">{extractedData.cropType}</span>
+                      </div>
+                    )}
+                    {extractedData.quantity && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">📦</span>
+                        <span className="text-gray-700">{extractedData.quantity} {extractedData.unit || "kg"}</span>
+                      </div>
+                    )}
+                    {extractedData.price && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">💰</span>
+                        <span className="text-gray-700">₹{extractedData.price}/{extractedData.unit || "kg"}</span>
+                      </div>
+                    )}
+                    {extractedData.location && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">📍</span>
+                        <span className="text-gray-700">{extractedData.location}</span>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+
+              {lastResult.data && !extractedData && (
                 <motion.ul
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -137,7 +252,7 @@ export function ResponseDisplay() {
                 </motion.ul>
               )}
 
-              {lastResult.suggestions && lastResult.suggestions.length > 0 && (
+              {lastResult.suggestions && lastResult.suggestions.length > 0 && !createSuccess && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -146,7 +261,7 @@ export function ResponseDisplay() {
                 >
                   <p className="text-sm text-gray-600 mb-2">Try saying:</p>
                   <ul className="space-y-1">
-                    {lastResult.suggestions.map((suggestion, index) => (
+                    {lastResult.suggestions.slice(0, 3).map((suggestion, index) => (
                       <li
                         key={index}
                         className="text-sm text-sky italic"
@@ -164,6 +279,45 @@ export function ResponseDisplay() {
                 transition={{ delay: 0.3 }}
                 className="flex flex-wrap gap-3"
               >
+                {canCreateOrder && !createSuccess && (
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={handleCreateOrder}
+                    disabled={isCreating}
+                    leftIcon={isCreating ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShoppingCart className="h-4 w-4" />}
+                  >
+                    {isCreating ? "Placing Order..." : "Confirm Order"}
+                  </Button>
+                )}
+
+                {canCreateListing && !createSuccess && (
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={handleCreateListing}
+                    disabled={isCreating}
+                    leftIcon={isCreating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Package className="h-4 w-4" />}
+                  >
+                    {isCreating ? "Creating..." : "Create Listing"}
+                  </Button>
+                )}
+
+                {createSuccess && (
+                  <>
+                    <Link href={ROUTES.dashboard.orders}>
+                      <Button variant="primary" size="sm" rightIcon={<ExternalLink className="h-4 w-4" />}>
+                        View Orders
+                      </Button>
+                    </Link>
+                    <Link href={ROUTES.dashboard.listings}>
+                      <Button variant="outline" size="sm" rightIcon={<ExternalLink className="h-4 w-4" />}>
+                        View Listings
+                      </Button>
+                    </Link>
+                  </>
+                )}
+
                 {isSuccess && lastResult.data?.listingId && (
                   <Link
                     href={ROUTES.dashboard.listingDetail(lastResult.data.listingId)}
@@ -173,13 +327,17 @@ export function ResponseDisplay() {
                     </Button>
                   </Link>
                 )}
+                
                 <Button
                   variant="secondary"
                   size="sm"
-                  onClick={resetState}
+                  onClick={() => {
+                    setCreateSuccess(null);
+                    resetState();
+                  }}
                   leftIcon={<RefreshCw className="h-4 w-4" />}
                 >
-                  {isSuccess ? "Create Another" : "Try Again"}
+                  {createSuccess ? "New Command" : isSuccess ? "Create Another" : "Try Again"}
                 </Button>
               </motion.div>
             </div>

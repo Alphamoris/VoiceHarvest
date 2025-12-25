@@ -34,6 +34,20 @@ export interface VoiceResultData {
   quantity?: number;
   price?: number;
   extractedEntities?: ExtractedEntities;
+  // New fields for voice ordering
+  canCreateOrder?: boolean;
+  canCreateListing?: boolean;
+  action?: string;
+  extractedData?: {
+    action?: string;
+    cropType?: string;
+    quantity?: number;
+    unit?: string;
+    price?: number;
+    location?: string;
+    orderAction?: "create" | "cancel" | "status";
+    listingId?: string;
+  };
 }
 
 export interface ExtractedEntities {

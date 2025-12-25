@@ -12,24 +12,28 @@ import { useVoice } from "@/context/VoiceContext";
 
 const exampleCommands = [
   {
-    title: "Create Listing",
-    command: "I have 50kg wheat at 60 rupees per kg",
+    title: "🛒 Place an Order",
+    command: "I want to buy 50 kg tomatoes",
+    result: "Creates an order request",
+    highlight: true,
+  },
+  {
+    title: "🌾 Sell Your Produce",
+    command: "I have 100 kg wheat at 45 rupees per kg",
     result: "Creates a listing automatically",
+    highlight: true,
   },
   {
-    title: "Update Inventory",
-    command: "Sold 25kg, remaining is 25kg",
-    result: "Updates your listing quantity",
+    title: "💰 Check Market Prices",
+    command: "What is the price of rice today?",
+    result: "Shows current market rates",
+    highlight: false,
   },
   {
-    title: "Check Order Status",
-    command: "What's the status of my order?",
-    result: "Reads your recent orders",
-  },
-  {
-    title: "Cancel Listing",
-    command: "Remove my wheat listing",
-    result: "Deletes the listing (with confirmation)",
+    title: "📋 Track Orders",
+    command: "Show my orders",
+    result: "Displays your order history",
+    highlight: false,
   },
 ];
 
@@ -57,9 +61,13 @@ export function VoiceChat() {
         >
           Voice Assistant
         </h1>
-        <p className="text-gray-600">
-          Speak to create listings, update inventory, or check orders
+        <p className="text-gray-600 mb-3">
+          Order produce, sell crops, or check prices - all with your voice!
         </p>
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-lime/20 rounded-full text-sm text-forest">
+          <span>🌾</span>
+          <span>Supports Hindi, Tamil, Telugu & more</span>
+        </div>
       </motion.div>
 
       <motion.div
@@ -143,7 +151,7 @@ export function VoiceChat() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className="bg-gray-50 rounded-lg p-3"
+                      className={`rounded-lg p-3 ${example.highlight ? 'bg-lime/20 border border-lime/40' : 'bg-gray-50'}`}
                     >
                       <h4 className="font-medium text-sm text-gray-800 mb-1">
                         {example.title}

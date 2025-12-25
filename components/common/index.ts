@@ -2,3 +2,4 @@ export { Loading, Skeleton, PageLoader, CardSkeleton, ListSkeleton, StatsSkeleto
 export { EmptyState, NoListings, NoOrders, NoHistory, NoSearchResults } from "./EmptyState";
 export { ToastContainer } from "./Toast";
 export { Pagination } from "./Pagination";
+export { ErrorBoundary, PageError, NotFoundError, AuthError } from "./ErrorBoundary";

@@ -21,10 +21,14 @@ import {
   Tractor,
   ChevronRight,
   MessageCircle,
+  Zap,
+  MapPin,
+  ArrowDown,
+  ArrowDownRight,
 } from "lucide-react";
 import { Navbar, Footer } from "@/components/shared";
 import { Button } from "@/components/shared/Button";
-import { ROUTES, FEATURES, TESTIMONIALS, PROBLEM_STATS, HOW_IT_WORKS } from "@/lib/constants";
+import { ROUTES, FEATURES, TESTIMONIALS, PROBLEM_STATS, HOW_IT_WORKS, GRAIN_PRODUCTS } from "@/lib/constants";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 30 },
@@ -407,7 +411,8 @@ function CropShowcase() {
 function ProblemSection() {
   return (
     <section className="py-20 md:py-28 bg-white relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-red-50 rounded-full blur-3xl opacity-50" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-red-50 rounded-full blur-3xl opacity-50" />
+      <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-50 rounded-full blur-3xl opacity-50" />
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
@@ -416,17 +421,30 @@ function ProblemSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <span className="inline-block px-4 py-1.5 bg-red-50 text-red-600 rounded-full text-sm font-semibold mb-4">
+          <motion.span 
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="inline-block px-4 py-1.5 bg-red-50 text-red-600 rounded-full text-sm font-semibold mb-4"
+          >
             The Problem
-          </span>
+          </motion.span>
           <h2
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6"
             style={{ fontFamily: "var(--font-poppins)" }}
           >
             Farmers Deserve{" "}
-            <span className="text-red-500">Better</span>
+            <motion.span 
+              className="text-red-500 inline-block"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              Better
+            </motion.span>
           </h2>
-          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Millions of Indian farmers lose income to middlemen and outdated systems. 
             Technology should empower them, not exclude them.
           </p>
@@ -437,27 +455,41 @@ function ProblemSection() {
           initial="initial"
           whileInView="animate"
           viewport={{ once: true }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto"
         >
           {PROBLEM_STATS.map((stat, index) => (
             <motion.div
               key={stat.label}
               variants={fadeInUp}
+              whileHover={{ y: -8, transition: { duration: 0.2 } }}
               className="relative group"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 to-orange-500/10 rounded-2xl transform group-hover:scale-105 transition-transform" />
-              <div className="relative bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-red-100 text-center">
+              <motion.div 
+                className="absolute inset-0 bg-gradient-to-br from-red-500/10 to-orange-500/10 rounded-2xl"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+              />
+              <div className="relative bg-white rounded-2xl p-8 shadow-lg border border-red-100 text-center h-full flex flex-col items-center justify-center min-h-[200px]">
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  whileInView={{ scale: 1, rotate: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1, type: "spring", stiffness: 200 }}
+                  className="text-4xl mb-4"
+                >
+                  {stat.icon}
+                </motion.div>
                 <motion.p
                   initial={{ scale: 0 }}
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, type: "spring" }}
-                  className="text-3xl md:text-5xl font-bold text-red-500 mb-2"
+                  transition={{ delay: index * 0.1 + 0.1, type: "spring" }}
+                  className="text-3xl md:text-4xl lg:text-5xl font-bold text-red-500 mb-3"
                   style={{ fontFamily: "var(--font-roboto-mono)" }}
                 >
                   {stat.stat}
                 </motion.p>
-                <p className="text-sm md:text-base text-gray-600">{stat.label}</p>
+                <p className="text-sm md:text-base text-gray-600 font-medium">{stat.label}</p>
               </div>
             </motion.div>
           ))}
@@ -553,10 +585,10 @@ function SolutionSection() {
           >
             <div className="grid grid-cols-2 gap-4">
               {[
-                { emoji: "🌾", label: "Wheat", value: "₹2,200/q" },
-                { emoji: "🍅", label: "Tomatoes", value: "₹45/kg" },
-                { emoji: "🧅", label: "Onions", value: "₹35/kg" },
-                { emoji: "🥔", label: "Potatoes", value: "₹28/kg" },
+                { emoji: "�", label: "Almonds", value: "₹650/kg" },
+                { emoji: "🍚", label: "Basmati Rice", value: "₹120/kg" },
+                { emoji: "🌾", label: "Wheat", value: "₹35/kg" },
+                { emoji: "🫘", label: "Chana Dal", value: "₹95/kg" },
               ].map((crop, i) => (
                 <motion.div
                   key={crop.label}
@@ -567,7 +599,13 @@ function SolutionSection() {
                   whileHover={{ scale: 1.05, rotate: 2 }}
                   className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/20"
                 >
-                  <span className="text-5xl mb-3 block">{crop.emoji}</span>
+                  <motion.span 
+                    className="text-5xl mb-3 block"
+                    animate={{ y: [0, -5, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
+                  >
+                    {crop.emoji}
+                  </motion.span>
                   <p className="font-semibold text-lg">{crop.label}</p>
                   <p className="text-lime font-bold">{crop.value}</p>
                 </motion.div>
@@ -589,14 +627,25 @@ function SolutionSection() {
 }
 
 function FeaturesSection() {
-  const featureIcons: Record<string, typeof Mic> = {
-    voice: Mic,
-    language: Globe2,
-    secure: ShieldCheck,
-    mobile: Smartphone,
-    support: Users,
-    growth: TrendingUp,
+  const featureIcons = {
+    mic: Mic,
+    globe: Globe2,
+    shield: ShieldCheck,
+    smartphone: Smartphone,
+    users: Users,
+    trending: TrendingUp,
+    zap: Zap,
+    map: MapPin,
   };
+
+  const iconColors = [
+    "from-purple-500 to-indigo-600",
+    "from-blue-500 to-cyan-500",
+    "from-green-500 to-emerald-600",
+    "from-yellow-500 to-orange-500",
+    "from-pink-500 to-rose-600",
+    "from-teal-500 to-green-600",
+  ];
 
   return (
     <section id="features" className="py-20 md:py-28 bg-cream relative overflow-hidden">
@@ -609,10 +658,15 @@ function FeaturesSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-lime/20 text-forest rounded-full text-sm font-semibold mb-4">
+          <motion.span 
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 bg-lime/20 text-forest rounded-full text-sm font-semibold mb-4"
+          >
             <Sprout className="h-4 w-4" />
             Features
-          </span>
+          </motion.span>
           <h2
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6"
             style={{ fontFamily: "var(--font-poppins)" }}
@@ -632,31 +686,64 @@ function FeaturesSection() {
           viewport={{ once: true }}
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
         >
-          {FEATURES.map((feature) => {
+          {FEATURES.map((feature, index) => {
             const Icon = featureIcons[feature.icon as keyof typeof featureIcons] || Sprout;
+            const gradientColor = iconColors[index % iconColors.length];
+            
             return (
               <motion.div
                 key={feature.title}
                 variants={fadeInUp}
-                whileHover={{ y: -8 }}
+                whileHover={{ y: -8, scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300 }}
                 className="group"
               >
-                <div className="h-full bg-white rounded-3xl p-8 shadow-soft hover:shadow-lg transition-all border border-gray-100 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-lime/10 to-transparent rounded-bl-full" />
+                <div className="h-full bg-white rounded-3xl p-8 shadow-soft hover:shadow-xl transition-all duration-300 border border-gray-100 relative overflow-hidden">
+                  <motion.div 
+                    className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-lime/5 to-transparent rounded-bl-full"
+                    initial={{ scale: 0, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                  />
                   
                   <motion.div
-                    whileHover={{ rotate: 12, scale: 1.1 }}
-                    className="w-16 h-16 rounded-2xl bg-gradient-to-br from-lime/20 to-forest/10 flex items-center justify-center mb-6 relative z-10"
+                    initial={{ scale: 0, rotate: -180 }}
+                    whileInView={{ scale: 1, rotate: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1, type: "spring", stiffness: 200 }}
+                    whileHover={{ rotate: 12, scale: 1.15 }}
+                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${gradientColor} flex items-center justify-center mb-6 relative z-10 shadow-lg`}
                   >
-                    <Icon className="h-8 w-8 text-forest" />
+                    <Icon className="h-8 w-8 text-white" />
                   </motion.div>
                   
-                  <h3 className="text-xl font-bold text-gray-900 mb-3" style={{ fontFamily: "var(--font-poppins)" }}>
+                  <motion.h3 
+                    className="text-xl font-bold text-gray-900 mb-3" 
+                    style={{ fontFamily: "var(--font-poppins)" }}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 + 0.1 }}
+                  >
                     {feature.title}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  </motion.h3>
+                  <motion.p 
+                    className="text-gray-600 leading-relaxed mb-4"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 + 0.2 }}
+                  >
                     {feature.description}
-                  </p>
+                  </motion.p>
+                  <motion.span 
+                    className="inline-flex items-center text-sm font-medium text-forest"
+                    whileHover={{ x: 5 }}
+                  >
+                    {feature.highlight}
+                    <ChevronRight className="h-4 w-4 ml-1" />
+                  </motion.span>
                 </div>
               </motion.div>
             );
@@ -668,9 +755,18 @@ function FeaturesSection() {
 }
 
 function HowItWorksSection() {
+  const stepIcons = ["🎤", "🤖", "🛒", "💵"];
+  const stepColors = [
+    "from-blue-500 to-indigo-600",
+    "from-purple-500 to-pink-600",
+    "from-orange-500 to-red-500",
+    "from-green-500 to-emerald-600",
+  ];
+
   return (
     <section id="how-it-works" className="py-20 md:py-28 bg-white relative overflow-hidden">
       <div className="absolute left-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-lime/10 rounded-full blur-3xl" />
+      <div className="absolute right-0 bottom-0 w-64 h-64 bg-gold/10 rounded-full blur-3xl" />
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
@@ -679,45 +775,140 @@ function HowItWorksSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-forest/10 text-forest rounded-full text-sm font-semibold mb-4">
+          <motion.span 
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 bg-forest/10 text-forest rounded-full text-sm font-semibold mb-4"
+          >
             <Tractor className="h-4 w-4" />
             How It Works
-          </span>
+          </motion.span>
           <h2
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6"
             style={{ fontFamily: "var(--font-poppins)" }}
           >
-            Simple as <span className="text-forest">1-2-3</span>
+            Simple as <span className="text-forest">1-2-3-4</span>
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
             Start selling your crops in minutes with our easy voice-first process.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8 md:gap-12 relative">
-          <div className="hidden md:block absolute top-24 left-[20%] right-[20%] h-1 bg-gradient-to-r from-forest via-lime to-gold rounded-full" />
-          
-          {HOW_IT_WORKS.map((step, index) => (
-            <motion.div
-              key={step.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.2 }}
-              className="text-center relative"
-            >
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 relative">
+            {HOW_IT_WORKS.map((step, index) => (
               <motion.div
-                whileHover={{ scale: 1.1, rotate: 10 }}
-                className="w-20 h-20 rounded-full bg-gradient-to-br from-forest to-forest/80 text-white text-3xl font-bold flex items-center justify-center mx-auto mb-6 shadow-lg relative z-10"
+                key={step.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.15 }}
+                className="relative"
               >
-                {index + 1}
+                <motion.div
+                  whileHover={{ scale: 1.03 }}
+                  className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 h-full relative overflow-hidden"
+                >
+                  <motion.div
+                    className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${stepColors[index]} opacity-10 rounded-bl-full`}
+                  />
+                  
+                  <div className="flex items-start gap-5">
+                    <motion.div
+                      initial={{ scale: 0, rotate: -180 }}
+                      whileInView={{ scale: 1, rotate: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.15, type: "spring", stiffness: 200 }}
+                      whileHover={{ scale: 1.1, rotate: 10 }}
+                      className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${stepColors[index]} text-white text-2xl font-bold flex items-center justify-center shrink-0 shadow-lg`}
+                    >
+                      {index + 1}
+                    </motion.div>
+                    
+                    <div className="flex-1">
+                      <motion.div
+                        className="text-4xl mb-3"
+                        animate={{ y: [0, -5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
+                      >
+                        {stepIcons[index]}
+                      </motion.div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-2" style={{ fontFamily: "var(--font-poppins)" }}>
+                        {step.title}
+                      </h3>
+                      <p className="text-gray-600 leading-relaxed">{step.description}</p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {index === 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.5 }}
+                    className="hidden md:block absolute -right-6 top-1/2 -translate-y-1/2 z-10"
+                  >
+                    <motion.div
+                      animate={{ x: [0, 5, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <ArrowRight className="w-10 h-10 text-forest" />
+                    </motion.div>
+                  </motion.div>
+                )}
+
+                {index === 1 && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.6 }}
+                    className="hidden md:block absolute -bottom-6 left-1/2 -translate-x-1/2 z-10"
+                  >
+                    <motion.div
+                      animate={{ y: [0, 5, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <ArrowDown className="w-10 h-10 text-forest" />
+                    </motion.div>
+                  </motion.div>
+                )}
+
+                {index === 2 && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.7 }}
+                    className="hidden md:block absolute -right-6 top-1/2 -translate-y-1/2 z-10"
+                  >
+                    <motion.div
+                      animate={{ x: [0, 5, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <ArrowRight className="w-10 h-10 text-forest" />
+                    </motion.div>
+                  </motion.div>
+                )}
               </motion.div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3" style={{ fontFamily: "var(--font-poppins)" }}>
-                {step.title}
-              </h3>
-              <p className="text-gray-600">{step.description}</p>
-            </motion.div>
-          ))}
+            ))}
+          </div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.8 }}
+            className="text-center mt-12"
+          >
+            <Link href={ROUTES.auth.register}>
+              <Button size="lg" rightIcon={<ArrowRight className="h-5 w-5" />}>
+                Start Selling Now
+              </Button>
+            </Link>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -796,24 +987,47 @@ function TestimonialsSection() {
   );
 }
 
+const FLOATING_WHEAT_POSITIONS = [
+  { left: 5, top: 10, duration: 6 },
+  { left: 15, top: 25, duration: 7 },
+  { left: 25, top: 45, duration: 8 },
+  { left: 35, top: 15, duration: 5.5 },
+  { left: 45, top: 55, duration: 6.5 },
+  { left: 55, top: 35, duration: 7.5 },
+  { left: 65, top: 65, duration: 8.5 },
+  { left: 75, top: 20, duration: 6 },
+  { left: 85, top: 50, duration: 7 },
+  { left: 95, top: 30, duration: 5 },
+  { left: 10, top: 70, duration: 6.5 },
+  { left: 20, top: 80, duration: 7.5 },
+  { left: 30, top: 60, duration: 8 },
+  { left: 40, top: 85, duration: 5.5 },
+  { left: 50, top: 75, duration: 6.5 },
+  { left: 60, top: 90, duration: 7 },
+  { left: 70, top: 40, duration: 8.5 },
+  { left: 80, top: 70, duration: 6 },
+  { left: 90, top: 85, duration: 7 },
+  { left: 98, top: 60, duration: 5.5 },
+];
+
 function CTASection() {
   return (
     <section className="py-20 md:py-28 bg-gradient-to-br from-forest via-forest to-forest/90 relative overflow-hidden">
       <div className="absolute inset-0">
-        {[...Array(20)].map((_, i) => (
+        {FLOATING_WHEAT_POSITIONS.map((pos, i) => (
           <motion.div
             key={i}
             className="absolute text-lime/10"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${pos.left}%`,
+              top: `${pos.top}%`,
             }}
             animate={{
               y: [-20, 20],
               rotate: [0, 360],
             }}
             transition={{
-              duration: 5 + Math.random() * 5,
+              duration: pos.duration,
               repeat: Infinity,
               repeatType: "reverse",
             }}

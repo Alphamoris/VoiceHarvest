@@ -98,26 +98,33 @@ export function VoiceProvider({ children }: { children: ReactNode }) {
       formData.append("audio", audioBlob);
       formData.append("language", "en-IN");
 
-      const response = await fetch("/api/voice/process-command", {
+      const response = await fetch("/api/voice/process", {
         method: "POST",
         body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to process voice command");
-      }
-
       const data = await response.json();
 
-      setTranscription(data.transcription || "");
-      setConfidence(data.confidence || 0);
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "Failed to process voice command");
+      }
+
+      const responseData = data.data || data;
+      
+      setTranscription(responseData.transcription || "");
+      setConfidence(responseData.confidence || 0);
 
       const result: VoiceResult = {
-        success: data.success,
-        message: data.message,
-        data: data.data,
-        error: data.error,
-        suggestions: data.suggestions,
+        success: true,
+        message: responseData.response || "Command processed",
+        data: {
+          extractedData: responseData.extractedData,
+          canCreateOrder: responseData.canCreateOrder,
+          canCreateListing: responseData.canCreateListing,
+          action: responseData.action,
+        },
+        error: undefined,
+        suggestions: responseData.suggestions || [],
       };
 
       setLastResult(result);
@@ -125,19 +132,15 @@ export function VoiceProvider({ children }: { children: ReactNode }) {
       const command: VoiceCommand = {
         id: Math.random().toString(36).substring(2, 9),
         userId: "",
-        transcription: data.transcription || "",
-        action: data.action || "UNKNOWN",
+        transcription: responseData.transcription || "",
+        action: responseData.action || "UNKNOWN",
         result,
-        confidence: data.confidence || 0,
+        confidence: responseData.confidence || 0,
         timestamp: new Date(),
       };
 
       setCommandHistory((prev) => [command, ...prev.slice(0, 9)]);
-      setVoiceState(result.success ? "success" : "error");
-
-      if (!result.success && result.error) {
-        setError(result.error);
-      }
+      setVoiceState("success");
     } catch (err) {
       setError("Failed to process voice command. Please try again.");
       setVoiceState("error");

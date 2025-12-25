@@ -44,6 +44,12 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "VoiceHarvest Team" }],
   creator: "VoiceHarvest",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/apple-icon.png",
+  },
   openGraph: {
     type: "website",
     locale: "en_IN",

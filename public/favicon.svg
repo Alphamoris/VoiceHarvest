@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1B5E20;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2E7D32;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="url(#bgGradient)"/>
+  <!-- Wheat grain -->
+  <g fill="#76FF03">
+    <!-- Main stem -->
+    <rect x="48" y="35" width="4" height="40" rx="2"/>
+    <!-- Wheat grains left -->
+    <ellipse cx="42" cy="38" rx="8" ry="4" transform="rotate(-30 42 38)"/>
+    <ellipse cx="40" cy="48" rx="8" ry="4" transform="rotate(-25 40 48)"/>
+    <ellipse cx="42" cy="58" rx="7" ry="3.5" transform="rotate(-20 42 58)"/>
+    <!-- Wheat grains right -->
+    <ellipse cx="58" cy="38" rx="8" ry="4" transform="rotate(30 58 38)"/>
+    <ellipse cx="60" cy="48" rx="8" ry="4" transform="rotate(25 60 48)"/>
+    <ellipse cx="58" cy="58" rx="7" ry="3.5" transform="rotate(20 58 58)"/>
+    <!-- Top grain -->
+    <ellipse cx="50" cy="28" rx="5" ry="8"/>
+  </g>
+  <!-- Mic icon (simplified) -->
+  <g fill="#FFFBF0">
+    <rect x="44" y="68" width="12" height="4" rx="2"/>
+    <rect x="48" y="72" width="4" height="8" rx="1"/>
+    <rect x="44" y="78" width="12" height="3" rx="1.5"/>
+  </g>
+</svg>
