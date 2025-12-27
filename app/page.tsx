@@ -174,7 +174,7 @@ function HeroSection() {
               transition={{ delay: 0.3 }}
               className="text-lg md:text-xl text-gray-600 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed"
             >
-              No typing, no hassle. Speak in <span className="text-forest font-semibold">Hindi</span>, <span className="text-forest font-semibold">Tamil</span>, <span className="text-forest font-semibold">Telugu</span>, or any Indian language. We create your listing automatically.
+              No typing, no hassle. Speak in <span className="text-forest font-semibold">Hindi</span>, <span className="text-forest font-semibold">Tamil</span>, or <span className="text-forest font-semibold">English</span>. We create your listing automatically.
             </motion.p>
 
             <motion.div
@@ -204,37 +204,46 @@ function HeroSection() {
               transition={{ delay: 0.6 }}
               className="mt-10 flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start"
             >
-              <div className="flex -space-x-3">
-                {["🧑‍🌾", "👨‍🌾", "👩‍🌾", "🌾"].map((emoji, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.7 + i * 0.1 }}
-                    className="w-12 h-12 rounded-full bg-gradient-to-br from-lime/20 to-forest/10 border-3 border-white flex items-center justify-center text-xl shadow-md"
-                  >
-                    {emoji}
-                  </motion.div>
-                ))}
-              </div>
-              <div>
-                <div className="flex items-center gap-1 mb-1">
-                  {[1, 2, 3, 4, 5].map((i) => (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.7 }}
+                className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-gradient-to-r from-lime/20 via-forest/10 to-gold/20 border border-lime/30"
+              >
+                <motion.div
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                >
+                  <Sprout className="h-6 w-6 text-forest" />
+                </motion.div>
+                <div className="text-left">
+                  <p className="text-sm font-semibold text-forest">Your Support Matters</p>
+                  <p className="text-xs text-gray-500">Help us add more languages!</p>
+                </div>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8 }}
+                className="flex items-center gap-2"
+              >
+                <div className="flex -space-x-2">
+                  {["🌾", "🌱", "🚜"].map((emoji, i) => (
                     <motion.div
                       key={i}
-                      initial={{ opacity: 0, rotate: -180 }}
-                      animate={{ opacity: 1, rotate: 0 }}
-                      transition={{ delay: 0.8 + i * 0.05 }}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.9 + i * 0.1 }}
+                      className="w-10 h-10 rounded-full bg-gradient-to-br from-lime/30 to-forest/20 border-2 border-white flex items-center justify-center text-lg shadow-md"
                     >
-                      <Star className="h-5 w-5 text-gold fill-gold" />
+                      {emoji}
                     </motion.div>
                   ))}
-                  <span className="ml-2 font-bold text-forest">4.9</span>
                 </div>
-                <p className="text-sm text-gray-600">
-                  Trusted by <span className="font-bold text-forest">10,000+</span> farmers across India
+                <p className="text-sm text-gray-600 ml-2">
+                  <span className="font-bold text-forest">Currently in Beta</span>
                 </p>
-              </div>
+              </motion.div>
             </motion.div>
           </motion.div>
 
@@ -357,10 +366,10 @@ function HeroSection() {
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 0.8 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden"
       >
         <motion.div
           animate={{ y: [0, 10, 0] }}
@@ -585,10 +594,10 @@ function SolutionSection() {
           >
             <div className="grid grid-cols-2 gap-4">
               {[
-                { emoji: "�", label: "Almonds", value: "₹650/kg" },
-                { emoji: "🍚", label: "Basmati Rice", value: "₹120/kg" },
-                { emoji: "🌾", label: "Wheat", value: "₹35/kg" },
-                { emoji: "🫘", label: "Chana Dal", value: "₹95/kg" },
+                { image: "/almonds.webp", label: "Almonds", value: "₹650/kg" },
+                { image: "/rice.webp", label: "Basmati Rice", value: "₹120/kg" },
+                { image: "/wheat.webp", label: "Wheat", value: "₹35/kg" },
+                { image: "/dal.webp", label: "Dal", value: "₹95/kg" },
               ].map((crop, i) => (
                 <motion.div
                   key={crop.label}
@@ -597,15 +606,19 @@ function SolutionSection() {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
                   whileHover={{ scale: 1.05, rotate: 2 }}
-                  className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/20"
+                  className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-center border border-white/20 overflow-hidden"
                 >
-                  <motion.span 
-                    className="text-5xl mb-3 block"
+                  <motion.div 
+                    className="w-16 h-16 mx-auto mb-3 rounded-xl overflow-hidden bg-white/10"
                     animate={{ y: [0, -5, 0] }}
                     transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
                   >
-                    {crop.emoji}
-                  </motion.span>
+                    <img 
+                      src={crop.image} 
+                      alt={crop.label}
+                      className="w-full h-full object-cover"
+                    />
+                  </motion.div>
                   <p className="font-semibold text-lg">{crop.label}</p>
                   <p className="text-lime font-bold">{crop.value}</p>
                 </motion.div>
@@ -755,12 +768,39 @@ function FeaturesSection() {
 }
 
 function HowItWorksSection() {
-  const stepIcons = ["🎤", "🤖", "🛒", "💵"];
-  const stepColors = [
-    "from-blue-500 to-indigo-600",
-    "from-purple-500 to-pink-600",
-    "from-orange-500 to-red-500",
-    "from-green-500 to-emerald-600",
+  const steps = [
+    {
+      number: "01",
+      icon: "🎤",
+      title: "Speak Your Listing",
+      description: "Just speak in your language. Describe your crop, quantity, and price naturally.",
+      color: "from-blue-500 to-indigo-600",
+      bgColor: "bg-blue-50",
+    },
+    {
+      number: "02", 
+      icon: "🤖",
+      title: "AI Processes It",
+      description: "Our smart AI understands your voice and creates a professional listing instantly.",
+      color: "from-purple-500 to-pink-600",
+      bgColor: "bg-purple-50",
+    },
+    {
+      number: "03",
+      icon: "🛒",
+      title: "Buyers Find You",
+      description: "Your listing goes live and reaches thousands of verified buyers across India.",
+      color: "from-orange-500 to-red-500",
+      bgColor: "bg-orange-50",
+    },
+    {
+      number: "04",
+      icon: "💵",
+      title: "Get Paid Fairly",
+      description: "Negotiate directly with buyers and receive secure payments to your account.",
+      color: "from-green-500 to-emerald-600",
+      bgColor: "bg-green-50",
+    },
   ];
 
   return (
@@ -796,104 +836,66 @@ function HowItWorksSection() {
         </motion.div>
 
         <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 relative">
-            {HOW_IT_WORKS.map((step, index) => (
-              <motion.div
-                key={step.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.15 }}
-                className="relative"
-              >
+          <div className="relative">
+            <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-blue-200 via-purple-200 to-green-200 -translate-y-1/2 rounded-full" />
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+              {steps.map((step, index) => (
                 <motion.div
-                  whileHover={{ scale: 1.03 }}
-                  className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 h-full relative overflow-hidden"
+                  key={step.title}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.15, duration: 0.5 }}
+                  className="relative"
                 >
                   <motion.div
-                    className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${stepColors[index]} opacity-10 rounded-bl-full`}
-                  />
-                  
-                  <div className="flex items-start gap-5">
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                    className={`${step.bgColor} rounded-3xl p-6 h-full border border-gray-100 shadow-sm hover:shadow-xl transition-shadow relative overflow-hidden group cursor-pointer`}
+                  >
                     <motion.div
-                      initial={{ scale: 0, rotate: -180 }}
-                      whileInView={{ scale: 1, rotate: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.15, type: "spring", stiffness: 200 }}
-                      whileHover={{ scale: 1.1, rotate: 10 }}
-                      className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${stepColors[index]} text-white text-2xl font-bold flex items-center justify-center shrink-0 shadow-lg`}
-                    >
-                      {index + 1}
-                    </motion.div>
+                      className={`absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br ${step.color} opacity-10 rounded-full group-hover:opacity-20 transition-opacity`}
+                    />
                     
-                    <div className="flex-1">
+                    <div className="relative z-10">
+                      <motion.div
+                        initial={{ scale: 0, rotate: -180 }}
+                        whileInView={{ scale: 1, rotate: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: index * 0.15 + 0.2, type: "spring", stiffness: 200 }}
+                        className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${step.color} text-white text-lg font-bold flex items-center justify-center mb-4 shadow-lg`}
+                      >
+                        {step.number}
+                      </motion.div>
+                      
                       <motion.div
                         className="text-4xl mb-3"
                         animate={{ y: [0, -5, 0] }}
                         transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
                       >
-                        {stepIcons[index]}
+                        {step.icon}
                       </motion.div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2" style={{ fontFamily: "var(--font-poppins)" }}>
+                      
+                      <h3 className="text-lg font-bold text-gray-900 mb-2" style={{ fontFamily: "var(--font-poppins)" }}>
                         {step.title}
                       </h3>
-                      <p className="text-gray-600 leading-relaxed">{step.description}</p>
+                      <p className="text-gray-600 text-sm leading-relaxed">{step.description}</p>
                     </div>
-                  </div>
+
+                    {index < 3 && (
+                      <motion.div 
+                        className="hidden lg:flex absolute -right-4 top-1/2 -translate-y-1/2 z-20 items-center justify-center w-8 h-8 rounded-full bg-white shadow-md border border-gray-100"
+                        animate={{ x: [0, 4, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      >
+                        <ChevronRight className="w-5 h-5 text-forest" />
+                      </motion.div>
+                    )}
+                  </motion.div>
                 </motion.div>
-
-                {index === 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.5 }}
-                    className="hidden md:block absolute -right-6 top-1/2 -translate-y-1/2 z-10"
-                  >
-                    <motion.div
-                      animate={{ x: [0, 5, 0] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    >
-                      <ArrowRight className="w-10 h-10 text-forest" />
-                    </motion.div>
-                  </motion.div>
-                )}
-
-                {index === 1 && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.6 }}
-                    className="hidden md:block absolute -bottom-6 left-1/2 -translate-x-1/2 z-10"
-                  >
-                    <motion.div
-                      animate={{ y: [0, 5, 0] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    >
-                      <ArrowDown className="w-10 h-10 text-forest" />
-                    </motion.div>
-                  </motion.div>
-                )}
-
-                {index === 2 && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.7 }}
-                    className="hidden md:block absolute -right-6 top-1/2 -translate-y-1/2 z-10"
-                  >
-                    <motion.div
-                      animate={{ x: [0, 5, 0] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    >
-                      <ArrowRight className="w-10 h-10 text-forest" />
-                    </motion.div>
-                  </motion.div>
-                )}
-              </motion.div>
-            ))}
+              ))}
+            </div>
           </div>
           
           <motion.div
@@ -901,7 +903,7 @@ function HowItWorksSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.8 }}
-            className="text-center mt-12"
+            className="text-center mt-14"
           >
             <Link href={ROUTES.auth.register}>
               <Button size="lg" rightIcon={<ArrowRight className="h-5 w-5" />}>
@@ -929,17 +931,27 @@ function TestimonialsSection() {
         >
           <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-gold/20 text-amber-700 rounded-full text-sm font-semibold mb-4">
             <MessageCircle className="h-4 w-4" />
-            Testimonials
+            Farmer Interviews
           </span>
           <h2
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6"
             style={{ fontFamily: "var(--font-poppins)" }}
           >
-            Farmers <span className="text-forest">Love</span> Us
+            What Farmers <span className="text-forest">Think</span>
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            Hear from real farmers who have transformed their business with VoiceHarvest.
+            We interviewed real farmers across India to understand their needs. Here&apos;s what they said about VoiceHarvest.
           </p>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-amber-50 rounded-full text-sm text-amber-700 border border-amber-200"
+          >
+            <span>🎤</span>
+            <span>Pre-launch feedback from our field research</span>
+          </motion.div>
         </motion.div>
 
         <motion.div
@@ -959,13 +971,13 @@ function TestimonialsSection() {
               <div className="bg-white rounded-3xl p-8 shadow-soft border border-gray-100 h-full relative overflow-hidden">
                 <Quote className="absolute top-4 right-4 h-12 w-12 text-lime/20" />
                 
-                <div className="flex items-center gap-1 mb-4">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <Star key={i} className="h-5 w-5 text-gold fill-gold" />
-                  ))}
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="px-3 py-1 bg-forest/10 text-forest text-xs font-medium rounded-full">
+                    🎙️ Interview
+                  </span>
                 </div>
                 
-                <p className="text-gray-700 mb-6 leading-relaxed relative z-10">
+                <p className="text-gray-700 mb-6 leading-relaxed relative z-10 italic">
                   &ldquo;{testimonial.quote}&rdquo;
                 </p>
                 
@@ -976,11 +988,102 @@ function TestimonialsSection() {
                   <div>
                     <p className="font-bold text-gray-900">{testimonial.author}</p>
                     <p className="text-sm text-gray-500">{testimonial.role}</p>
+                    <p className="text-xs text-gray-400 mt-1">{testimonial.context}</p>
                   </div>
                 </div>
               </div>
             </motion.div>
           ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function LanguageSupportSection() {
+  const languages = [
+    { name: "English", native: "English", flag: "🇬🇧", status: "active" },
+    { name: "Hindi", native: "हिंदी", flag: "🇮🇳", status: "active" },
+    { name: "Tamil", native: "தமிழ்", flag: "🇮🇳", status: "active" },
+    { name: "Telugu", native: "తెలుగు", flag: "🇮🇳", status: "coming" },
+    { name: "Kannada", native: "ಕನ್ನಡ", flag: "🇮🇳", status: "coming" },
+    { name: "Bengali", native: "বাংলা", flag: "🇮🇳", status: "coming" },
+    { name: "Marathi", native: "मराठी", flag: "🇮🇳", status: "coming" },
+    { name: "Gujarati", native: "ગુજરાતી", flag: "🇮🇳", status: "coming" },
+  ];
+
+  return (
+    <section className="py-16 md:py-20 bg-gradient-to-br from-forest/5 via-lime/5 to-gold/5 relative overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-12"
+        >
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-forest/10 text-forest rounded-full text-sm font-semibold mb-4">
+            <Globe2 className="h-4 w-4" />
+            Language Support
+          </span>
+          <h2
+            className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
+            style={{ fontFamily: "var(--font-poppins)" }}
+          >
+            Your Voice, <span className="text-forest">Your Language</span>
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Currently supporting 3 languages with more coming soon. Your support helps us expand!
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 max-w-5xl mx-auto">
+          {languages.map((lang, i) => (
+            <motion.div
+              key={lang.name}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05 }}
+              whileHover={{ scale: 1.05, y: -5 }}
+              className={`relative p-4 rounded-xl text-center ${
+                lang.status === "active"
+                  ? "bg-white shadow-lg border-2 border-lime"
+                  : "bg-white/50 border border-gray-200"
+              }`}
+            >
+              {lang.status === "active" && (
+                <span className="absolute -top-2 -right-2 px-2 py-0.5 bg-lime text-forest text-xs font-bold rounded-full">
+                  ✓
+                </span>
+              )}
+              <span className="text-2xl block mb-1">{lang.flag}</span>
+              <p className="font-semibold text-sm text-gray-800">{lang.native}</p>
+              <p className="text-xs text-gray-500">{lang.name}</p>
+              {lang.status === "coming" && (
+                <span className="text-xs text-amber-600 mt-1 block">Coming Soon</span>
+              )}
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4 }}
+          className="text-center mt-10"
+        >
+          <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-gold/20 to-amber-100 rounded-full border border-gold/30">
+            <motion.span
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              ❤️
+            </motion.span>
+            <span className="text-amber-800 font-medium">
+              Your support helps us add more languages and reach more farmers!
+            </span>
+          </div>
         </motion.div>
       </div>
     </section>
@@ -1114,6 +1217,7 @@ export default function HomePage() {
       <HowItWorksSection />
       <TestimonialsSection />
       <CTASection />
+      <LanguageSupportSection />
       <Footer />
     </main>
   );

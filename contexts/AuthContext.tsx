@@ -8,6 +8,8 @@ import {
   signOut,
   sendPasswordResetEmail,
   onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 
@@ -36,6 +38,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
   register: (email: string, password: string, userData: Partial<User>) => Promise<void>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
@@ -48,6 +51,8 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+const googleProvider = new GoogleAuthProvider();
+
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
@@ -58,10 +63,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
       if (fbUser) {
         setFirebaseUser(fbUser);
+        const emailName = fbUser.email ? fbUser.email.split("@")[0] : "";
+        const formattedName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
         setUser({
           id: fbUser.uid,
           email: fbUser.email || "",
-          name: fbUser.displayName || "User",
+          name: fbUser.displayName || formattedName || "User",
+          profileImage: fbUser.photoURL || undefined,
           role: "FARMER",
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -90,15 +98,42 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const loginWithGoogle = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const result = await signInWithPopup(auth, googleProvider);
+      const emailName = result.user.email ? result.user.email.split("@")[0] : "";
+      const formattedName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+      setUser({
+        id: result.user.uid,
+        email: result.user.email || "",
+        name: result.user.displayName || formattedName || "User",
+        profileImage: result.user.photoURL || undefined,
+        role: "FARMER",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to login with Google";
+      setError(message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const register = async (email: string, password: string, userData: Partial<User>) => {
     try {
       setLoading(true);
       setError(null);
       const result = await createUserWithEmailAndPassword(auth, email, password);
+      const emailName = email.split("@")[0];
+      const formattedName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
       setUser({
         id: result.user.uid,
         email: result.user.email || email,
-        name: userData.name || "User",
+        name: userData.name || formattedName || "User",
         role: userData.role || "FARMER",
         phone: userData.phone,
         location: userData.location,
@@ -156,6 +191,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         isAuthenticated,
         error,
         login,
+        loginWithGoogle,
         register,
         logout,
         resetPassword,

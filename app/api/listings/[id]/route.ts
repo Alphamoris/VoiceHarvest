@@ -14,7 +14,7 @@ const mockListings: Record<string, object> = {
     unit: "KG",
     pricePerUnit: 40,
     qualityGrade: "A",
-    images: ["/tomatoes.jpg"],
+    images: ["/turmeric.jpg"],
     location: { state: "Maharashtra", district: "Pune", village: "Khed" },
     status: "ACTIVE",
     sellerId: "1",

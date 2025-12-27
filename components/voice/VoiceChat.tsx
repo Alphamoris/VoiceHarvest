@@ -66,7 +66,7 @@ export function VoiceChat() {
         </p>
         <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-lime/20 rounded-full text-sm text-forest">
           <span>🌾</span>
-          <span>Supports Hindi, Tamil, Telugu & more</span>
+          <span>Supports English, Hindi & Tamil</span>
         </div>
       </motion.div>
 

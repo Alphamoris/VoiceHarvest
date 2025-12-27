@@ -57,7 +57,7 @@ const mockListings = [
     unit: "KG",
     pricePerUnit: 120,
     qualityGrade: "A+" as const,
-    images: ["/rice.jpg"],
+    images: ["/rice.webp"],
     location: { state: "Punjab", district: "Amritsar", village: "Tarn Taran" },
     status: "ACTIVE" as const,
     sellerId: "1",
@@ -182,8 +182,18 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const isFarmer = user?.role === "FARMER";
   const greeting = getGreeting();
-  const GreetingIcon = greeting.icon;
   const [mounted, setMounted] = useState(false);
+
+  const getUserDisplayName = () => {
+    if (user?.name && user.name !== "User") {
+      return user.name.split(" ")[0];
+    }
+    if (user?.email) {
+      const emailName = user.email.split("@")[0];
+      return emailName.charAt(0).toUpperCase() + emailName.slice(1);
+    }
+    return "User";
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -198,14 +208,6 @@ export default function DashboardPage() {
         className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
       >
         <div className="flex items-start gap-4">
-          <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-            className={`hidden sm:flex w-14 h-14 rounded-2xl bg-gradient-to-br ${greeting.gradient} items-center justify-center shadow-lg`}
-          >
-            <GreetingIcon className="w-7 h-7 text-white" />
-          </motion.div>
           <div>
             <motion.p
               initial={{ opacity: 0, x: -20 }}
@@ -221,7 +223,7 @@ export default function DashboardPage() {
               transition={{ delay: 0.15 }}
               className="font-display text-2xl md:text-3xl font-bold text-gray-900"
             >
-              Welcome back, {user?.name?.split(" ")[0] || "User"}! 👋
+              Welcome back, {getUserDisplayName()}! 👋
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0, x: -20 }}

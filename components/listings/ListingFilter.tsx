@@ -89,7 +89,8 @@ export function ListingFilter({
           onChange={(e) =>
             updateFilter("sortBy", e.target.value as FilterState["sortBy"])
           }
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:border-forest focus:ring-2 focus:ring-forest/20 outline-none transition-all appearance-none bg-white min-w-[160px]"
+          title="Sort listings"
+          className="px-4 py-3 rounded-lg border border-gray-300 focus:border-forest focus:ring-2 focus:ring-forest/20 outline-none transition-all appearance-none bg-white min-w-[160px] cursor-pointer"
         >
           <option value="newest">Newest First</option>
           <option value="price_low">Price: Low to High</option>
@@ -126,7 +127,8 @@ export function ListingFilter({
               <select
                 value={filters.cropType}
                 onChange={(e) => updateFilter("cropType", e.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-forest focus:ring-2 focus:ring-forest/20 outline-none transition-all appearance-none bg-white"
+                title="Filter by crop type"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-forest focus:ring-2 focus:ring-forest/20 outline-none transition-all appearance-none bg-white cursor-pointer"
               >
                 <option value="">All Categories</option>
                 {CROP_OPTIONS.map((option) => (
@@ -146,7 +148,8 @@ export function ListingFilter({
                 <select
                   value={filters.state}
                   onChange={(e) => updateFilter("state", e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:border-forest focus:ring-2 focus:ring-forest/20 outline-none transition-all appearance-none bg-white"
+                  title="Filter by state"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:border-forest focus:ring-2 focus:ring-forest/20 outline-none transition-all appearance-none bg-white cursor-pointer"
                 >
                   <option value="">All States</option>
                   {INDIAN_STATES.map((state) => (
@@ -167,7 +170,8 @@ export function ListingFilter({
                 <select
                   value={filters.qualityGrade}
                   onChange={(e) => updateFilter("qualityGrade", e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:border-forest focus:ring-2 focus:ring-forest/20 outline-none transition-all appearance-none bg-white"
+                  title="Filter by quality grade"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:border-forest focus:ring-2 focus:ring-forest/20 outline-none transition-all appearance-none bg-white cursor-pointer"
                 >
                   <option value="">All Grades</option>
                   {QUALITY_GRADES.map((grade) => (
@@ -186,12 +190,15 @@ export function ListingFilter({
               <select
                 value={filters.status}
                 onChange={(e) => updateFilter("status", e.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-forest focus:ring-2 focus:ring-forest/20 outline-none transition-all appearance-none bg-white"
+                title="Filter by status"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-forest focus:ring-2 focus:ring-forest/20 outline-none transition-all appearance-none bg-white cursor-pointer"
               >
                 <option value="">All Status</option>
-                <option value="active">Active</option>
-                <option value="sold">Sold</option>
-                <option value="expired">Expired</option>
+                <option value="ACTIVE">Active</option>
+                <option value="PENDING">Pending</option>
+                <option value="SOLD">Sold</option>
+                <option value="EXPIRED">Expired</option>
+                <option value="DRAFT">Draft</option>
               </select>
             </div>
 
