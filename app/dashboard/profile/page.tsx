@@ -47,10 +47,10 @@ export default function ProfilePage() {
   });
 
   const stats = [
-    { label: "Total Sales", value: "₹1,25,000", icon: TrendingUp, color: "from-green-500 to-emerald-600" },
-    { label: "Active Listings", value: "12", icon: Award, color: "from-blue-500 to-indigo-600" },
-    { label: "Completed Orders", value: "45", icon: CheckCircle, color: "from-purple-500 to-pink-600" },
-    { label: "Member Since", value: "Jan 2024", icon: Calendar, color: "from-orange-500 to-red-500" },
+    { label: "Total Sales", value: "₹1,25,000", icon: TrendingUp, color: "from-forest to-forest-light" },
+    { label: "Active Listings", value: "12", icon: Award, color: "from-lime-dark to-lime" },
+    { label: "Completed Orders", value: "45", icon: CheckCircle, color: "from-gold to-gold-light" },
+    { label: "Member Since", value: "Jan 2024", icon: Calendar, color: "from-forest to-lime-dark" },
   ];
 
   const handleSave = () => {

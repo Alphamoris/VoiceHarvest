@@ -652,12 +652,12 @@ function FeaturesSection() {
   };
 
   const iconColors = [
-    "from-purple-500 to-indigo-600",
-    "from-blue-500 to-cyan-500",
-    "from-green-500 to-emerald-600",
-    "from-yellow-500 to-orange-500",
-    "from-pink-500 to-rose-600",
-    "from-teal-500 to-green-600",
+    "from-forest to-forest-light",
+    "from-lime-dark to-lime",
+    "from-gold to-gold-light",
+    "from-forest to-lime-dark",
+    "from-gold-dark to-gold",
+    "from-lime to-forest-light",
   ];
 
   return (
@@ -774,32 +774,32 @@ function HowItWorksSection() {
       icon: "🎤",
       title: "Speak Your Listing",
       description: "Just speak in your language. Describe your crop, quantity, and price naturally.",
-      color: "from-blue-500 to-indigo-600",
-      bgColor: "bg-blue-50",
+      color: "from-forest to-forest-light",
+      bgColor: "bg-lime/10",
     },
     {
       number: "02", 
       icon: "🤖",
       title: "AI Processes It",
       description: "Our smart AI understands your voice and creates a professional listing instantly.",
-      color: "from-purple-500 to-pink-600",
-      bgColor: "bg-purple-50",
+      color: "from-lime-dark to-lime",
+      bgColor: "bg-lime/20",
     },
     {
       number: "03",
       icon: "🛒",
       title: "Buyers Find You",
       description: "Your listing goes live and reaches thousands of verified buyers across India.",
-      color: "from-orange-500 to-red-500",
-      bgColor: "bg-orange-50",
+      color: "from-gold-dark to-gold",
+      bgColor: "bg-gold/10",
     },
     {
       number: "04",
       icon: "💵",
       title: "Get Paid Fairly",
       description: "Negotiate directly with buyers and receive secure payments to your account.",
-      color: "from-green-500 to-emerald-600",
-      bgColor: "bg-green-50",
+      color: "from-forest to-lime-dark",
+      bgColor: "bg-forest/10",
     },
   ];
 
@@ -837,7 +837,7 @@ function HowItWorksSection() {
 
         <div className="max-w-5xl mx-auto">
           <div className="relative">
-            <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-blue-200 via-purple-200 to-green-200 -translate-y-1/2 rounded-full" />
+            <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-forest/30 via-lime/40 to-gold/30 -translate-y-1/2 rounded-full" />
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
               {steps.map((step, index) => (

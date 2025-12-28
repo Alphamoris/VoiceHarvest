@@ -104,7 +104,7 @@ const supportOptions = [
     description: "Speak to our support team",
     action: "1800-XXX-XXXX",
     highlight: "Toll-Free",
-    color: "from-green-500 to-emerald-600",
+    color: "from-forest to-forest-light",
   },
   {
     icon: MessageCircle,
@@ -112,7 +112,7 @@ const supportOptions = [
     description: "Chat with us on WhatsApp",
     action: "+91 98765 43210",
     highlight: "24/7 Available",
-    color: "from-green-400 to-green-600",
+    color: "from-lime-dark to-lime",
   },
   {
     icon: Mail,
@@ -120,7 +120,7 @@ const supportOptions = [
     description: "Send us an email",
     action: "support@voiceharvest.in",
     highlight: "Response in 24hrs",
-    color: "from-blue-500 to-indigo-600",
+    color: "from-gold to-gold-light",
   },
 ];
 

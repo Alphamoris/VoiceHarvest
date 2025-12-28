@@ -11,9 +11,9 @@ import { useState, useEffect } from "react";
 
 const getGreeting = () => {
   const hour = new Date().getHours();
-  if (hour < 12) return { text: "Good Morning", icon: Sun, gradient: "from-amber-400 to-orange-500" };
-  if (hour < 17) return { text: "Good Afternoon", icon: CloudSun, gradient: "from-sky-400 to-blue-500" };
-  return { text: "Good Evening", icon: Sparkles, gradient: "from-purple-400 to-indigo-500" };
+  if (hour < 12) return { text: "Good Morning", icon: Sun, gradient: "from-gold to-gold-dark" };
+  if (hour < 17) return { text: "Good Afternoon", icon: CloudSun, gradient: "from-lime to-forest-light" };
+  return { text: "Good Evening", icon: Sparkles, gradient: "from-forest to-forest-dark" };
 };
 
 const mockStats = [
